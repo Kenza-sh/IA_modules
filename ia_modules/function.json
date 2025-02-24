@@ -1,0 +1,20 @@
+{
+    "scriptFile": "__init__.py",
+    "bindings": [
+      {
+        "authLevel": "function",
+        "type": "httpTrigger",
+        "direction": "in",
+        "name": "req",
+        "methods": [
+          "post"
+        ],
+        "route": "ia_modules_script_hugging_face"
+      },
+      {
+        "type": "http",
+        "direction": "out",
+        "name": "$return"
+      }
+    ]
+}
