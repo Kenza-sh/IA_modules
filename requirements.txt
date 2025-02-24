@@ -2,6 +2,7 @@ azure-functions
 transformers
 dateparser
 tiktoken
-torch 
-sentence_transformers
+torch
+sentence-transformers
 sentencepiece
+babel
