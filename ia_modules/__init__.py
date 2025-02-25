@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import dateparser
 from babel.dates import format_date
 import calendar
+from typing import Optional, Dict
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
