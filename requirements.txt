@@ -6,4 +6,5 @@ dateparser
 babel
 tiktoken
 sentencepiece
+numpy
 
