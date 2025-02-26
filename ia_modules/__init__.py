@@ -161,7 +161,7 @@ class CreneauExtractor:
     
     def convert_french_numbers_to_digits(self, text):
         """Remplace les nombres français par leurs équivalents numériques et normalise les heures."""
-        self.logger.debug(f'Conversion des nombres français dans le texte: "{text}"')
+        logger.debug(f'Conversion des nombres français dans le texte: "{text}"')
         pattern = re.compile(r'\b(' + '|'.join(re.escape(word) for word in self.french_number_mapping.keys()) + r')\b', re.IGNORECASE)
         text = pattern.sub(lambda match: self.french_number_mapping[match.group(0).lower()], text)
         text = re.sub(r'(\d{1,2})h(?!\d)', r'\1h00', text)  # Normalisation des heures
@@ -219,7 +219,7 @@ class CreneauExtractor:
 
     def get_creneau(self, choix_patient):
         """Analyse le texte pour extraire une date et une heure."""
-        self.logger.info(f"Traitement de l'entrée: {choix_patient}")
+        logger.info(f"Traitement de l'entrée: {choix_patient}")
         choix_patient = choix_patient.lower()
         choix_patient=self.convert_french_numbers_to_digits(choix_patient)
         choix_patient = re.sub(r'[^\w\s]', ' ', choix_patient)
@@ -230,7 +230,7 @@ class CreneauExtractor:
 
 
         if not creneau_parts:
-            self.logger.warning('Aucune entité DATE ou TIME détectée.')
+            logger.warning('Aucune entité DATE ou TIME détectée.')
             return None
         
         # Combinaison des informations extraites
@@ -247,7 +247,7 @@ class CreneauExtractor:
                     date_obj = date_obj.replace(hour=9, minute=0)
             return date_obj.strftime("%Y-%m-%dT%H:%M:%S")
         else:
-            self.logger.warning(f"Échec de l'analyse de la date: {creneau_choisi}")
+            logger.warning(f"Échec de l'analyse de la date: {creneau_choisi}")
             return None
 
 
