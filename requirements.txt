@@ -1,10 +1,8 @@
 azure-functions
 transformers
--f https://download.pytorch.org/whl/torch_stable.html
-torch==1.13.0+cpu
+torch --index-url https://download.pytorch.org/whl/cpu
 dateparser
 babel
 tiktoken
 sentencepiece
-numpy
 
