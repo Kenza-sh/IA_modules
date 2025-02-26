@@ -11,17 +11,16 @@ from typing import Optional, Dict
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-logger.info("Initialisation du modèle NER...")
-model_name ="Jean-Baptiste/camembert-ner-with-dates"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForTokenClassification.from_pretrained(model_name)
-nlp = pipeline('ner', model=model, tokenizer=tokenizer, aggregation_strategy="simple")
-logger.info("Modèle NER initialisé avec succès.")
+
 
 class InformationExtractor:
-    def __init__(self,nlp):
+    def __init__(self):
         # Initialisation unique du modèle NER
-        self.nlp =nlp 
+        logger.info("Initialisation du modèle NER...")
+        self.tokenizer = AutoTokenizer.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
+        self.model = AutoModelForTokenClassification.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
+        self.nlp = pipeline('ner', model=self.model, tokenizer=self.tokenizer, aggregation_strategy="simple")
+        logger.info("Modèle NER initialisé avec succès.")
     def check_noun(self, msg_2_check):
         logger.debug(f"Vérification du nom : {msg_2_check}")
         def check_str(msg_2_check: str) -> bool:
@@ -124,9 +123,13 @@ class InformationExtractor:
         return None
 
 class CreneauExtractor:
-    def __init__(self,nlp):
+    def __init__(self):
         # Initialisation du modèle NLP
-        self.nlp=nlp
+        logger.info("Initialisation du modèle NER...")
+        self.tokenizer = AutoTokenizer.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
+        self.model = AutoModelForTokenClassification.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
+        self.nlp = pipeline('ner', model=self.model, tokenizer=self.tokenizer, aggregation_strategy="simple")
+        logger.info("Modèle NER initialisé avec succès.")
         # Dictionnaire de correspondance des nombres en français
         self.french_number_mapping = { "premier": "1", "un": "1", "deux": "2", "trois": "3", "quatre": "4", "cinq": "5",
             "six": "6", "sept": "7", "huit": "8", "neuf": "9", "dix": "10", "onze": "11", "douze": "12", "treize": "13", "quatorze": "14",
@@ -388,13 +391,17 @@ LISTE_MALADIES_RARES= ['22q11DS', '3-méthylcrotonyl glycinurie', '46,XY DSD', "
                        'XLSA', 'XLSA-A', 'XLTT', 'XMEN', 'XMPMA', 'XPDS', 'XPV', 'XX-GD', 'XYLT1-CDG', 'Xérocytose familiale', 'Xérocytose héréditaire', 'Yersiniose rare', 'YNS', 'YOPD', 'Zygodactylie type 1', 'Zygodactylie type 2', 'Zygodactylie type 3', 'Zygodactylie type 4', 'Zygodactylie type Castilla', 'Zygodactylie type Lueken', 'Zygodactylie type Montagu', 'Zygodactylie type Weidenreich', 'Zygomycose']
 
 class CRAnonymiser:
-    def __init__(self,nlp):
+    def __init__(self):
         """
         Initialisation de la classe CRAnonymiser.
         :param maladies: Liste des maladies rares à anonymiser.
         """
         self.maladies = LISTE_MALADIES_RARES
-        self.nlp=nlp
+        logger.info("Initialisation du modèle NER...")
+        self.tokenizer = AutoTokenizer.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
+        self.model = AutoModelForTokenClassification.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
+        self.nlp = pipeline('ner', model=self.model, tokenizer=self.tokenizer, aggregation_strategy="simple")
+        logger.info("Modèle NER initialisé avec succès.")
         self.MEDICAL_PROPER_NAMES = MEDICAL_PROPER_NAMES
 
     def check_email(self,email_adr: str) -> bool:
@@ -505,9 +512,9 @@ class CRAnonymiser:
 
 
 
-extractor = InformationExtractor(nlp)
-extractor1=CreneauExtractor(nlp)
-anonymiser= CRAnonymiser(nlp)
+extractor = InformationExtractor()
+extractor1=CreneauExtractor()
+anonymiser= CRAnonymiser()
 
 handlers: Dict[str, callable] = {
     "extraire_nom": extractor.extraire_nom,
