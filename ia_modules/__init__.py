@@ -1,5 +1,6 @@
 import azure.functions as func
 import logging
+import numpy as np
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
 import re
 import json
