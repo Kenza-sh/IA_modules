@@ -114,7 +114,19 @@ class InformationExtractor:
         return None
     def extraire_adresse_mail(self, texte):
         logger.info(f"Extraction de l'adresse email à partir du texte : {texte}")
-        texte = re.sub(r'\s*arobase\s*', '@', texte, flags=re.IGNORECASE)
+        substitutions = [
+        (r'\s*(arobase|at)\s*', '@'),        # Gestion des variantes de @
+        (r'\s*(underscore|under\s*score)\s*', '_'),        # Gestion des underscores
+        (r'\s*(dot|point)\s*', '.'),         # Gestion des points
+        (r'\s*(hyphen|minus|moins|tiret)\s*', '-'),       # Gestion des traits d'union
+        (r'\s*@\s*', '@'),                   # Suppression des espaces autour de @
+        (r'\s*\.\s*', '.'),                  # Suppression des espaces autour des points
+        (r'\s*-\s*', '-'),                   # Suppression des espaces autour des -
+        (r'\s*_\s*', '_')                    # Suppression des espaces autour des _
+    ]
+
+        for pattern, replacement in substitutions:
+                          texte = re.sub(pattern, replacement, texte, flags=re.IGNORECASE)
         adresse_mail = re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", texte)
         if adresse_mail:
             logger.info(f"Adresse email extraite : {adresse_mail[0].strip()}")
