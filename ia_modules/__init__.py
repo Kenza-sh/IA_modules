@@ -13,14 +13,17 @@ from typing import Optional, Dict
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+def load_ner_model():
+    logger.info("Chargement du modèle NER...")
+    tokenizer = AutoTokenizer.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
+    model = AutoModelForTokenClassification.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
+    return pipeline('ner', model=model, tokenizer=tokenizer, aggregation_strategy="simple")
+
+nlp = load_ner_model()
 
 class InformationExtractor:
-    def __init__(self):
-        # Initialisation unique du modèle NER
-        logger.info("Initialisation du modèle NER...")
-        self.tokenizer = AutoTokenizer.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
-        self.model = AutoModelForTokenClassification.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
-        self.nlp = pipeline('ner', model=self.model, tokenizer=self.tokenizer, aggregation_strategy="simple")
+    def __init__(self , nlp_pipeline):
+        self.nlp=nlp_pipeline
         logger.info("Modèle NER initialisé avec succès.")
     def check_noun(self, msg_2_check):
         logger.debug(f"Vérification du nom : {msg_2_check}")
@@ -136,12 +139,10 @@ class InformationExtractor:
         return None
 
 class CreneauExtractor:
-    def __init__(self):
+    def __init__(self,nlp_pipeline):
         # Initialisation du modèle NLP
         logger.info("Initialisation du modèle NER...")
-        self.tokenizer = AutoTokenizer.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
-        self.model = AutoModelForTokenClassification.from_pretrained("Jean-Baptiste/camembert-ner-with-dates")
-        self.nlp = pipeline('ner', model=self.model, tokenizer=self.tokenizer, aggregation_strategy="simple")
+        self.nlp=nlp_pipeline
         logger.info("Modèle NER initialisé avec succès.")
         # Dictionnaire de correspondance des nombres en français
         self.french_number_mapping = { "premier": "1", "un": "1", "deux": "2", "trois": "3", "quatre": "4", "cinq": "5",
@@ -263,8 +264,8 @@ class CreneauExtractor:
             return None
 
 
-extractor = InformationExtractor()
-extractor1=CreneauExtractor()
+extractor = InformationExtractor(nlp)
+extractor1=CreneauExtractor(nlp)
 
 handlers: Dict[str, callable] = {
     "extraire_nom": extractor.extraire_nom,
